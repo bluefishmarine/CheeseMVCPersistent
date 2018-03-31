@@ -17,7 +17,7 @@ namespace CheeseMVC.Controllers
             context = dbContext;
         }
 
-        // GET: /<controller>/
+        // GET: /<controller>/ 
         public IActionResult Index()
         {
             //List<Cheese> cheeses = context.Cheeses.ToList();
@@ -29,6 +29,7 @@ namespace CheeseMVC.Controllers
 
         public IActionResult Add()
         {
+            IEnumerable<CheeseCategory> categories = context.Categories.ToList();
             AddCheeseViewModel addCheeseViewModel = new AddCheeseViewModel(context.Categories.ToList());
             return View(addCheeseViewModel);
         }
@@ -39,11 +40,14 @@ namespace CheeseMVC.Controllers
             if (ModelState.IsValid)
             {
                 // Add the new cheese to my existing cheeses
+
+                CheeseCategory newCategory = context.Categories.Single(c => c.ID == addCheeseViewModel.CategoryID);
+
                 Cheese newCheese = new Cheese
                 {
                     Name = addCheeseViewModel.Name,
                     Description = addCheeseViewModel.Description,
-                    CategoryID = addCheeseViewModel.CategoryID
+                    Category = newCategory
                 };
 
                 context.Cheeses.Add(newCheese);
